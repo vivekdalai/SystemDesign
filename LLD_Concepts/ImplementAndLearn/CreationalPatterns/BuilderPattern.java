@@ -16,6 +16,7 @@ import java.util.Map;
  * 2) Notice each setter returns this (for fluent chaining).
  * 3) build() validates and returns an immutable HttpRequest.
  * 4) Run the main() method to see it in action.
+ *
  */
 public class BuilderPattern {
 
