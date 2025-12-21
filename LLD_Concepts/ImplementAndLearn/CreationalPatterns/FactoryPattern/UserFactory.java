@@ -1,3 +1,6 @@
+package FactoryPattern;
+
+
 /**
  * Minimal Factory Pattern example: create Admin, Moderator, and User
  * 
