@@ -1,0 +1,14 @@
+Requirements
+
+ 1) Registering a user
+ 2) Login (2-factor auth)
+ 3) Profile Creation
+ 4) Set preferences
+    - profile
+    - Email preference
+    - Layout preference
+ 5) Sending Emails (with attachments)
+ 6) Searching Emails
+ 7) Tagging Emails
+ 8) Spam and Virus Detection
+ 9) Contacts and Groups 
