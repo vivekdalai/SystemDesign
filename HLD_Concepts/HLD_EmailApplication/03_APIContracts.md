@@ -327,6 +327,39 @@ Producer (EmailService) and Consumer (Client App) define pacts:
 - On v2 release, update pact and re-test interactions.
 - CI/CD: Fail build if contracts break.
 
+#### Example 4: Header-Based Versioning (Stripe Style)
+- **Approach**: Some platforms (e.g., Stripe) use request-based versioning via a custom header (e.g., Api-Version or Stripe-Version) instead of changing URLs. This keeps endpoints stable while allowing behavioral differences based on the requested version.
+
+- **Example Requests**:
+  - Older client:
+    ```
+    POST /customers
+    Stripe-Version: 2020-08-27
+    Body: { "name": "John Doe", "email": "john@example.com" }
+    ```
+    Response: Old format (e.g., without new fields like "tax_id").
+
+  - Newer client:
+    ```
+    POST /customers
+    Stripe-Version: 2022-11-15
+    Body: { "name": "John Doe", "email": "john@example.com", "tax_id": "123-45-6789" }
+    ```
+    Response: New format (includes "tax_id" support, additional metadata).
+
+- **Server Logic**:
+  - Extract version from header.
+  - If version == "2020-08-27": Use old response schema/logic (ignore new fields).
+  - If version == "2022-11-15": Use new schema/logic (validate/enforce new fields).
+  - Default: Latest version if unspecified.
+  - Pros: URLs don't change (better for caching/SEO); easier client migration.
+  - Cons: Requires header inspection in Gateway/services; potential for version-specific bugs.
+
+- **Implementation in Our System**:
+  - Gateway checks Api-Version header and routes to versioned handlers in services.
+  - Contract Registry: Map header values to spec versions (e.g., "2020-08-27" → v1 OpenAPI spec).
+  - Deprecation: Return warnings in headers (e.g., Deprecation: true) for old versions; sunset after announcement.
+
 ## Monitoring & Documentation
 - **OpenAPI Specs**: Generate interactive docs at /api-docs (Swagger UI).
 - **Metrics**: Track API usage, latency (Prometheus).
